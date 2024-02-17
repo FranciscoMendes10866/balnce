@@ -24,4 +24,4 @@ app.use(
   }),
 );
 
-app.listen(3333);
+app.listen({ port: process.env.PORT });

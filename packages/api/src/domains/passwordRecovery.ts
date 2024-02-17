@@ -57,10 +57,7 @@ export const passwordRecoveryRouter = router({
       if (!result) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
 
       return {
-        shortAuthID: jwtArtisan(
-          { id: user.id, timeframe: "BRIEF" },
-          "FOUR_MIN",
-        ),
+        shortAuthID: jwtArtisan({ id: user.id, timeframe: "BRIEF" }),
       };
     }),
   confirmReset: publicProcedure

@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const client = new Resend("API_KEY");
+const client = new Resend(process.env.RESEND_API_KEY);
 
 type IBaseSendEmail = {
   to: string;

@@ -1,6 +1,8 @@
 import { sign, verify } from "jsonwebtoken";
 import dayjs from "dayjs";
 
+const SECRET = process.env.JWT_SECRET || "secret";
+
 export const SESSION_SPAN = {
   BRIEF: "BRIEF",
   LONG: "LONG",
@@ -13,21 +15,15 @@ type JwtPayload = {
   timeframe?: ISessionSpan;
 };
 
-const SECRET = "secret";
-
-const TOKEN_EXPIRATION = {
-  FIFTEEN_MIN: 15 * 60,
-  FOUR_MIN: 4 * 60,
+const TOKEN_EXPIRATION: Record<ISessionSpan, number> = {
+  LONG: 15 * 60,
+  BRIEF: 4 * 60,
 };
 
-type ITokenExpiration = keyof typeof TOKEN_EXPIRATION;
-
-export const jwtArtisan = (
-  payload: JwtPayload,
-  expiration: ITokenExpiration = "FIFTEEN_MIN",
-) => {
+export const jwtArtisan = (payload: JwtPayload) => {
   if (!payload.timeframe) payload.timeframe = "LONG";
-  return sign(payload, SECRET, { expiresIn: TOKEN_EXPIRATION[expiration] });
+  const expiresIn = TOKEN_EXPIRATION[payload.timeframe];
+  return sign(payload, SECRET, { expiresIn });
 };
 
 export const verifyJwt = (token: string) => verify(token, SECRET) as JwtPayload;
